@@ -39,14 +39,18 @@ def get_task_types():
 	task_types = r.json()
 	return task_types
 
-def get_my_tasks(id=None):
+def get_task(task_id):
+	r = requests.get(url + '/tasks/' + str(task_id) + '.json', headers=headers_get)
+	return r.json()
 
-	if not id:
-		id = get_user_info()
+def get_my_tasks(user_id=None):
+
+	if not user_id:
+		user_id = get_user_info()
 
 	tasks = get_all_tasks()
 	for task in tasks:
-		if task['owner_id'] == id:
+		if task['owner_id'] == user_id:
 			print(task)
 			input('Press enter to continue...')
 
