@@ -64,6 +64,8 @@ def main():
     parser.add_argument('-e', '--estimates', action='store_true', help='List estimate types')
     parser.add_argument('-c', '--columns', action='store_true', help='List column types')
     parser.add_argument('--task-types', action='store_true', help='List task types')
+    parser.add_argument('-s', '--search-tasks', nargs='?', help='Search for a task with regex')
+    parser.add_argument('-i', '--ignore-cases', action='store_true', help='Ignore cases in search')
 
     args, unknown = parser.parse_known_args()
     
@@ -90,6 +92,9 @@ def main():
         return 0
     if args.task_types:
         get_task_types()
+        return 0
+    if args.search_tasks:
+        search_task(args.search_tasks, args.ignore_cases)
         return 0
 
     menu()

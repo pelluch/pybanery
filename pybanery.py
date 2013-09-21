@@ -29,8 +29,21 @@ def get_users():
     params = r.json()
     return params
 
-def search_task(regexp, type=None, estimate_id=None, column=None):
+def search_task(regexp, ignore_cases=True, type=None, estimate_id=None, column=None):
     tasks = get_my_tasks()
+    matched = []
+    if ignore_cases:
+        regexp = regexp.lower()
+    for task in tasks:
+        title = task['title']
+        if ignore_cases:
+            title = title.lower()
+
+        match = re.search(regexp, title)
+        if match:
+            matched.append(task)
+            print(str(task['id']) + '\t' + task['title'])
+
 
 
 def get_user_info():
