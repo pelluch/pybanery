@@ -1,0 +1,92 @@
+#!/usr/bin/python
+import sys
+import argparse
+import pybanery
+from pybanery import *
+
+# Fix Python 2.x.
+try: input = raw_input
+except NameError: pass
+
+def create_menu():
+
+	print('Which column do you want to add the task to?')
+	cols = get_columns()
+	(column_id, col_dict) = create_resource_dict(cols, capitalize=True)
+	#print('Column id: ' + str(column_id))
+
+	title = input('Set task title: ')
+	description = input('Set task description: ')
+
+	task_types = get_task_types()
+	(task_type_id, task_type_dict) = create_resource_dict(task_types, capitalize=True)
+	#print('Task type id: ' + str(task_type_id))
+
+	estimates = get_project_estimates()
+	(estimate_id, estimate_dict) = create_resource_dict(estimates, key='value')
+
+	print('Finally, asign one or more users to the task')
+	users = get_users()
+	(owner_ids, user_dict) = create_resource_dict(users, mult=True)
+	
+	for owner_id in owner_ids:
+		r = create_task_object(title, column_id, description, estimate_id, owner_id, task_type_id)
+
+def menu():
+	options = { '1' : {'desc' : 'Create', 'func' : create_menu} }
+
+	for option in options:
+		print(option + '. ' + options[option]['desc'])
+
+	str_choice = ''
+	while not str_choice in options:
+		str_choice = input('Choose an option: ')
+
+	options[str_choice]['func']()
+
+
+
+def main():
+	
+	parser = argparse.ArgumentParser(description='Python kanbanery frontend', add_help=True)
+	parser.add_argument('-u', '--user', action='store_true', help='List your user information')
+	parser.add_argument('-a', '--all', action='store_true', help='List all user information')
+	parser.add_argument('-t', '--tasks', action='store_true', help='List your tasks')
+	parser.add_argument('-e', '--estimates', action='store_true', help='List estimate types')
+	parser.add_argument('-c', '--columns', action='store_true', help='List column types')
+	parser.add_argument('--task-types', action='store_true', help='List task types')
+
+	args, unknown = parser.parse_known_args()
+	
+	if not authenticate():
+		return -1
+
+	if hasattr(args, 'func'):
+		args.func(args)
+
+	if args.user:
+		get_user_info()
+		return 0
+	if args.all:
+		get_users()
+		return 0
+	if args.tasks:
+		get_my_tasks()
+		return 0
+	if args.estimates:
+		get_project_estimates()
+		return 0
+	if args.columns:
+		print(get_columns())
+		return 0
+	if args.task_types:
+		get_task_types()
+		return 0
+
+	menu()
+
+	return 0
+
+
+if __name__ == "__main__":
+   sys.exit(main())
