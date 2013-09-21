@@ -20,14 +20,10 @@ def get_columns():
 	params = r.json()
 	return params
 
-def search_task(owner_id):
-	print('hi')
-
 def get_users():
 	r = requests.get(url + '/projects/' + project + '/users.json', headers=headers_get)
 	params = r.json()
 	return params
-	#print('Welcome, ' + params['name'])
 
 def get_user_info():
 	r = requests.get(url + '/user.json', headers=headers_get)
@@ -48,10 +44,11 @@ def get_my_tasks(user_id=None):
 	if not user_id:
 		user_id = get_user_info()
 
+	user_tasks = []
 	tasks = get_all_tasks()
 	for task in tasks:
 		if task['owner_id'] == user_id:
-			print(task)
+			user_tasks.append(task)
 			input('Press enter to continue...')
 
 def get_all_tasks():
