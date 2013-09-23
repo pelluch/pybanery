@@ -126,7 +126,7 @@ def create_resource_dict(resources, key='name', make_choice=True, capitalize=Fal
                             last = int(nums[1])
                             if first <= last and nums[0] in params and nums[1] in params:
                                 for i in range(first, last + 1):
-                                    chosen.append(params[str(i)]['id'])
+                                    chosen.append(str(i))
                             else:
                                 print('Numbers out of range')
                                 valid = False
@@ -135,12 +135,11 @@ def create_resource_dict(resources, key='name', make_choice=True, capitalize=Fal
                             valid = False
                     else:
                         if choice in params:
-                            chosen.append(params[choice]['id'])
+                            chosen.append(choice)
                         else:
                             print('Selection invalid')
                             valid = False
                 chosen = sorted(set(chosen))
-                print(chosen)
                 return (chosen, params)
 
         else:

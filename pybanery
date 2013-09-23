@@ -13,24 +13,27 @@ def create_menu():
     print('Which column do you want to add the task to?')
     cols = get_columns()
     (column_id, col_dict) = create_resource_dict(cols, capitalize=True)
-    #print('Column id: ' + str(column_id))
+    print('Column id: ' + str(column_id))
 
     title = input('Set task title: ')
     description = input('Set task description: ')
 
     task_types = get_task_types()
     (task_type_id, task_type_dict) = create_resource_dict(task_types, capitalize=True)
-    #print('Task type id: ' + str(task_type_id))
+    print('Task type id: ' + str(task_type_id))
 
     estimates = get_project_estimates()
     (estimate_id, estimate_dict) = create_resource_dict(estimates, key='value')
 
     print('Finally, asign one or more users to the task')
     users = get_users()
-    (owner_ids, user_dict) = create_resource_dict(users, mult=True)
-    
-    for owner_id in owner_ids:
-        r = create_task_object(title, column_id, description, estimate_id, owner_id, task_type_id)
+    (choices, user_dict) = create_resource_dict(users, mult=True)
+
+    for choice in choices:
+        r = create_task_object(title, column_id, description, estimate_id, user_dict[choice]['id'], task_type_id)
+        params = r.json()
+        print(user_dict[choice]['name'] + ' is assigned #' + str(params['id']))
+        #print(users[owner_id])
 
 def exit():
     print('Exiting')
